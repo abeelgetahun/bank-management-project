@@ -13,20 +13,14 @@ struct UserInfo {
     double balance;
     string address;
 };
-
-// Function to read user information from a file into a map
 map<string, UserInfo> readUserDatabase(const string& filename) {
     map<string, UserInfo> userDatabase;
     ifstream file(filename);
-
     if (file.is_open()) {
         string username, password, name,address;
         double balance;
-        // Read data from the file line by line until the end of the file is reached
         while (file >> username >> password >> name>>balance>>address) {
-            // Create a UserInfo object with the read data
             UserInfo userInfo{username, password,name,balance,address};
-            // Add the UserInfo object to the map using the username as the key
             userDatabase[username] = userInfo;
         }
         file.close();
@@ -34,13 +28,9 @@ map<string, UserInfo> readUserDatabase(const string& filename) {
 
     return userDatabase;
 }
-
-// Function to write user information to a file
 void writeUserDatabase(const string& filename, const map<string, UserInfo>& userDatabase) {
     ofstream file(filename);
-
     if (file.is_open()) {
-        // Iterate through each entry in the userDatabase map
         for (const auto& entry : userDatabase) {
             file << entry.second.username << " " << entry.second.password << " " << entry.second.name <<" "<<entry.second.balance<<" "<<entry.second.address<<"\n";
         }
@@ -49,16 +39,11 @@ void writeUserDatabase(const string& filename, const map<string, UserInfo>& user
         cerr << "Error opening file: " << filename << endl;
     }
 }
-
-// Function to check if a user name and password are correct
 bool checkCredentials(const map<string, UserInfo>& userDatabase, const string& username, const string& password) {
-     // Find the iterator corresponding to the provided username in the userDatabase map
+    
     auto it = userDatabase.find(username);
-    // Check if the iterator points to the end of the map, indicating that the username was not found
-    // Also, check if the password associated with the found username matches the provided password
     return (it != userDatabase.end() && it->second.password == password);
 }
-// Function to check if a user name exists in the user database
 bool usernameExists(const map<string, UserInfo>& userDatabase, const string& username) {
     return userDatabase.find(username) != userDatabase.end();
 }
@@ -66,11 +51,9 @@ bool usernameExists(const map<string, UserInfo>& userDatabase, const string& use
 int main() {
     string filename = "user_data.txt";
     map<string, UserInfo> userDatabase;
-    //declares a map called userDatabase to store user information;
     string user,password;
     double newBalance;
     start_loop:
-    // Read user information from the file
     userDatabase = readUserDatabase(filename);
     int choice, balance;
     cout<<"+------------------------------------------------------------+" <<endl;
@@ -96,7 +79,6 @@ int main() {
             cin>>password;
              if (checkCredentials(userDatabase, user, password)) {
             cout << "Login successful!\n";
-            // Display the name of the user and continue
                    signin_display_loop:
                    cout<<"+------------------------------------------------------------+" <<endl;
                    cout<<"|          "<<setw(10)<<userDatabase[user].name<<", Welcome                               |" <<endl;
@@ -149,9 +131,7 @@ int main() {
                                       goto transfer_amount_loop;
                                       }
                                   newBalance-=amount;
-                                  // Directly update the balance using the subscript operator
                                   userDatabase[user].balance = newBalance;
-                                  // Update the #file with the new user information
                                   writeUserDatabase(filename,userDatabase);
                                   double newuserbalance=userDatabase[str_choice].balance;
                                   newuserbalance+=amount;
@@ -207,9 +187,7 @@ int main() {
 
                            newBalance=userDatabase[user].balance;
                            newBalance+=choice;
-                           // Directly update the balance using the subscript operator
                           userDatabase[user].balance = newBalance;
-                           // Update the #file with the new user information
                            writeUserDatabase(filename,userDatabase);
 
                            cout <<"+----------------------------------------------------------------+" <<endl
@@ -246,9 +224,7 @@ int main() {
                            }
                             else{
                             newBalance-=choice;
-                           // Directly update the balance using the subscript operator
                           userDatabase[user].balance = newBalance;
-                           // Update the #file with the new user information
                            writeUserDatabase(filename,userDatabase);
                            cout <<"+---------------------------------------------------------------+" <<endl
                                 <<"|        * Withdrawal *                                         |" <<endl
@@ -358,8 +334,6 @@ int main() {
 
            UserInfo newUser{newUsername, newPassword,name, balance,address};
            userDatabase[newUsername] = newUser;
-
-           // Update the file with the new user
            writeUserDatabase(filename, userDatabase);
             cout<<"+------------------------------------------------------------+" <<endl;
             cout<<"|     * Sign Up successful! *                                |" <<endl;
